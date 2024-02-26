@@ -21,6 +21,12 @@
 
 /* Originally by Steve Chamberlain, sac@cygnus.com */
 
+#include <../gnulib/config.h>
+
+#include <winsock2.h>
+#include <ws2ipdef.h>
+#include <windows.h>
+
 #include "defs.h"
 #include "frame.h"
 #include "inferior.h"
@@ -34,10 +40,9 @@
 #include <signal.h>
 #include <sys/types.h>
 #include <fcntl.h>
-#include <winsock2.h>
-#include <ws2ipdef.h>
-#include <windows.h>
+#include <io.h>
 #include <imagehlp.h>
+#include <stdlib.h>
 #ifdef __CYGWIN__
 #include <wchar.h>
 #include <sys/cygwin.h>
@@ -3719,8 +3724,8 @@ set_output_binary_mode (void)
      results in expect seeing "\r\r\n".  The tests aren't prepared
      currently for other forms of eol.  As a workaround, we force the
      output to binary mode.  */
-  setmode (fileno (stdout), O_BINARY);
-  setmode (fileno (stderr), O_BINARY);
+  _setmode (fileno (stdout), O_BINARY);
+  _setmode (fileno (stderr), O_BINARY);
 }
 
 /* Restore stdout and stderr handles to "normal" mode.  */

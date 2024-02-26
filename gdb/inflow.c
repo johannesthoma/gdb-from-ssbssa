@@ -179,15 +179,11 @@ static gdb::optional<sighandler_t> sigquit_ours;
    fork_inferior, while forking a new child.  */
 static std::string inferior_thisrun_terminal;
 
-#if GDB_MANAGED_TERMINALS
-
 /* The file descriptor of the master end of the pty that we're giving
    to the inferior when starting it up, if we created the terminal
    ourselves.  This is set by new_tty_prefork, and like
    INFERIOR_THISRUN_TERMINAL, is transient.  */
 static int inferior_thisrun_terminal_pty_fd = -1;
-
-#endif /* GDB_MANAGED_TERMINALS */
 
 #endif /* USES_FORK_CHILD */
 
@@ -565,6 +561,14 @@ inferior_stdin_event_handler (int error, gdb_client_data client_data)
   gdb_assert (run_terminal->pty_fd != -1);
   child_terminal_flush_from_to (STDIN_FILENO, run_terminal->pty_fd,
 				false);
+}
+
+#else
+
+static void
+inferior_stdout_event_handler (int error, gdb_client_data client_data)
+{
+	/* do nothing */
 }
 
 #endif /* GDB_MANAGED_TERMINALS */
